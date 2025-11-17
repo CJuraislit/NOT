@@ -10,3 +10,19 @@ export const gridLineX = (x: number, gridWidth: number, cellSize: number, stageW
 export const gridLineY = (y: number, gridHeight: number, cellSize: number, stageH: number) => {
   return y === 0 ? 0.5 : y === gridHeight ? stageH - 0.5 : y * cellSize + 0.5;
 };
+
+const STAGE_BASE_SIZE = 50 * 6;
+
+export const calcCellSize = (
+  gridWidth: number,
+  gridHeight: number,
+  maxStageSize: number = STAGE_BASE_SIZE,
+) => {
+  if (gridWidth <= 0 || gridHeight <= 0) return 1;
+
+  const sizeX = Math.floor(maxStageSize / gridWidth);
+  const sizeY = Math.floor(maxStageSize / gridHeight);
+
+  const cellSize = Math.min(sizeX, sizeY);
+  return Math.max(cellSize, 1);
+};
