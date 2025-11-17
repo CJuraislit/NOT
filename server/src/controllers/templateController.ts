@@ -24,7 +24,6 @@ export const getAllWithProgress = async (req: AuthRequest, res: Response, next: 
     const result = templates.map((template) => {
       const progress = template.progress?.[0];
       const solvedCount = progress?.solved_count ?? 0;
-      const solvedCoords = progress?.solved_coords ?? [];
       const isCompleted = progress?.is_completed ?? false;
       const totalCount = template.data.length;
 
