@@ -8,9 +8,10 @@ export const useTemplatesQuery = () => {
   });
 };
 
-export const useTemplateQuery = (id: number) => {
+export const useTemplateQuery = (id?: number) => {
   return useQuery({
     queryKey: ['template', id],
-    queryFn: () => getTemplate(id),
+    queryFn: () => getTemplate(id!),
+    enabled: !!id,
   });
 };

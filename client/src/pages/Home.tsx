@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useTemplateQuery } from '/hooks/queries/template.queries';
+import { useTemplateQuery, useTemplatesQuery } from '/hooks/queries/template.queries';
 import UIButton from '/components/UI/UIButton/UIButton';
 import PixelGridInteractive from '/components/features/PixelGridInteractive/PixelGridInteractive';
 import { userAttemptPixelMutation } from '/hooks/mutations/template.mutations';
@@ -7,17 +7,43 @@ import { usePixelSelectStore } from '/store/pixelSelcet.store';
 
 const Home = () => {
   const [showGrid, setShowGrid] = useState(true);
-  const { data, isLoading, isError } = useTemplateQuery(3);
-  const { mutate, isPending } = userAttemptPixelMutation(3);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const { data: templates, isLoading, isError } = useTemplatesQuery();
+
+  const activeTemplateId = templates?.[activeIndex]?.id;
+
+  const {
+    data: template,
+    isLoading: isTemplateLoading,
+    isError: isTemplateError,
+  } = useTemplateQuery(activeTemplateId);
+
+  const { mutate, isPending } = userAttemptPixelMutation(activeTemplateId);
   const selected = usePixelSelectStore((s) => s.selected);
+  const clearSelected = usePixelSelectStore((s) => s.clear);
 
   const handleAttempt = useCallback(() => {
-    if (!selected) return;
+    if (!selected || !activeTemplateId) return;
     mutate({ x: selected.x, y: selected.y });
-  }, [mutate, selected]);
+  }, [mutate, selected, activeTemplateId]);
+
+  const changeTemplate = (direction: 'prev' | 'next') => {
+    if (!templates) return;
+
+    const delta = direction === 'prev' ? -1 : 1;
+    const nextIndex = activeIndex + delta;
+
+    if (nextIndex < 0 || nextIndex >= templates.length) return;
+
+    clearSelected();
+    setActiveIndex(nextIndex);
+  };
 
   if (isLoading) return null;
-  if (isError || !data) return null;
+  if (isError || !templates) return null;
+
+  if (isTemplateLoading || isTemplateError || !template) return null;
 
   return (
     <div
@@ -30,18 +56,35 @@ const Home = () => {
         gap: '10px',
       }}
     >
-      <p>{data.name}</p>
+      <p>{template.name}</p>
+
+      <div style={{ display: 'flex', gap: '8px' }}>
+        <button disabled={activeIndex === 0} onClick={() => changeTemplate('prev')}>
+          {'<'}
+        </button>
+        <span>
+          {activeIndex + 1} / {templates.length}
+        </span>
+        <button
+          disabled={activeIndex === templates.length - 1}
+          onClick={() => changeTemplate('next')}
+        >
+          {'>'}
+        </button>
+      </div>
+
       <div style={{ padding: '10px', border: '4px solid #9e9e9b' }}>
         <PixelGridInteractive
-          gridWidth={data.width}
-          gridHeight={data.height}
+          gridWidth={template.width}
+          gridHeight={template.height}
           showGrid={showGrid}
-          solvedCoords={data.solvedCoords}
-          solvedCount={data.solvedCount}
-          isCompleted={data.isCompleted}
-          cellSize={10}
+          solvedCoords={template.solvedCoords}
+          solvedCount={template.solvedCount}
+          isCompleted={template.isCompleted}
+          // cellSize={10}
         />
       </div>
+
       <UIButton disabled={!selected || isPending} onClick={handleAttempt}>
         {isPending ? 'Checking...' : 'Check pixel'}
       </UIButton>

@@ -1,16 +1,16 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AttemptPixelPayload, TemplateListItem } from '/types/api/templateAPI';
-import { attemptPixel, getTemplate } from '/api/templateAPI';
+import { AttemptPixelPayload, TemplateDetail } from '/types/api/templateAPI';
+import { attemptPixel } from '/api/templateAPI';
 
-export const userAttemptPixelMutation = (id: number) => {
+export const userAttemptPixelMutation = (id?: number) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (coords: AttemptPixelPayload) => attemptPixel(id, coords),
+    mutationFn: (coords: AttemptPixelPayload) => attemptPixel(id!, coords),
     onSuccess: (data) => {
       if (data.correct) {
         queryClient.setQueryData(
           ['template', id],
-          (prev: TemplateListItem): TemplateListItem =>
+          (prev: TemplateDetail): TemplateDetail =>
             prev
               ? {
                   ...prev,

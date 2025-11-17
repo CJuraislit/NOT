@@ -5,7 +5,6 @@ export type TemplateListItem = {
   name: string;
   totalCount: number;
   solvedCount: number;
-  solvedCoords: CoordTuple[];
   isCompleted: boolean;
 };
 
@@ -13,6 +12,7 @@ export type TemplateDetail = TemplateListItem & {
   description: string;
   width: number;
   height: number;
+  solvedCoords: CoordTuple[];
 };
 
 export type AttemptPixelPayload = {
