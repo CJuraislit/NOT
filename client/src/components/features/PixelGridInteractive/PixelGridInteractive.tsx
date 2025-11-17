@@ -1,6 +1,5 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { PixelGridInteractiveProps } from '/components/features/PixelGridInteractive/types';
-import Konva from 'konva';
 import { usePixelSelectStore } from '/store/pixelSelcet.store';
 import { Group, Layer, Rect, Shape, Stage } from 'react-konva';
 import SolvedCellsLayer from '../SolvedCellLayer/SolvedCellsLayer';
@@ -50,11 +49,6 @@ const PixelGridInteractive = (props: PixelGridInteractiveProps) => {
   );
 
   const { stageW, stageH } = stageSize(gridWidth, gridHeight, cellSize);
-
-  useEffect(() => {
-    console.log('serv coord', selectedServer);
-    console.log('cli coord', selectedClient);
-  }, [selectedServer, selectedClient]);
 
   return (
     <Stage width={stageW} height={stageH}>

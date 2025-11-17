@@ -9,14 +9,14 @@ export const getAllWithProgress = async (req: AuthRequest, res: Response, next: 
 
     const templates = await Template.findAll({
       where: { is_active: true },
-      attributes: ['id', 'name', 'width', 'height', 'data'],
+      attributes: ['id', 'name', 'data'],
       include: [
         {
           model: UserProgress,
           as: 'progress',
           required: false,
           where: { user_id: userId },
-          attributes: ['solved_count', 'is_completed', 'solved_coords'],
+          attributes: ['solved_count', 'is_completed'],
         },
       ],
     });
@@ -25,7 +25,7 @@ export const getAllWithProgress = async (req: AuthRequest, res: Response, next: 
       const progress = template.progress?.[0];
       const solvedCount = progress?.solved_count ?? 0;
       const solvedCoords = progress?.solved_coords ?? [];
-      const completed = progress?.is_completed ?? false;
+      const isCompleted = progress?.is_completed ?? false;
       const totalCount = template.data.length;
 
       return {
@@ -35,8 +35,7 @@ export const getAllWithProgress = async (req: AuthRequest, res: Response, next: 
         height: template.height,
         totalCount,
         solvedCount,
-        solvedCoords,
-        completed,
+        isCompleted,
       };
     });
 
@@ -59,6 +58,7 @@ export const getOneWithProgress = async (req: AuthRequest, res: Response, next: 
 
     const template = await Template.findOne({
       where: { id: id, is_active: true },
+      attributes: ['id', 'name', 'description', 'width', 'height', 'data'],
       include: [
         {
           model: UserProgress,
@@ -76,6 +76,7 @@ export const getOneWithProgress = async (req: AuthRequest, res: Response, next: 
     const solvedCount = progress?.solved_count;
     const solvedCoords = progress?.solved_coords ?? [];
     const isCompleted = progress?.is_completed ?? false;
+    const totalCount = template.data.length;
 
     return res.json({
       id: template.id,
@@ -84,6 +85,7 @@ export const getOneWithProgress = async (req: AuthRequest, res: Response, next: 
       width: template.width,
       height: template.height,
       solvedCount,
+      totalCount,
       solvedCoords,
       isCompleted,
     });
