@@ -4,6 +4,7 @@ import UIButton from '/components/UI/UIButton/UIButton';
 import PixelGridInteractive from '/components/features/PixelGridInteractive/PixelGridInteractive';
 import { userAttemptPixelMutation } from '/hooks/mutations/template.mutations';
 import { usePixelSelectStore } from '/store/pixelSelcet.store';
+import { calcCellSize } from '/utils/grid';
 
 const Home = () => {
   const [showGrid, setShowGrid] = useState(true);
@@ -45,6 +46,8 @@ const Home = () => {
 
   if (isTemplateLoading || isTemplateError || !template) return null;
 
+  const cellSize = calcCellSize(template.width, template.height);
+
   return (
     <div
       style={{
@@ -81,7 +84,7 @@ const Home = () => {
           solvedCoords={template.solvedCoords}
           solvedCount={template.solvedCount}
           isCompleted={template.isCompleted}
-          // cellSize={10}
+          cellSize={cellSize}
         />
       </div>
 
