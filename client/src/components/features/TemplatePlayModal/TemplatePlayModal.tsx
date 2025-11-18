@@ -41,11 +41,11 @@ const TemplatePlayModal = (props: TemplatePlayModalProps) => {
         />
       </div>
       <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center' }}>
-        <UIButton disabled={!selected || isPending} onClick={handleAttempt}>
-          {isPending ? 'Checking...' : 'Check pixel'}
-        </UIButton>
         <UIButton onClick={() => setShowGrid(!showGrid)}>
           {showGrid ? 'Hide grid' : 'Show grid'}
+        </UIButton>
+        <UIButton disabled={!selected || isPending} onClick={handleAttempt}>
+          {isPending ? 'Checking...' : 'Check pixel'}
         </UIButton>
       </div>
     </UIModal>
