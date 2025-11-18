@@ -6,7 +6,7 @@ const AppLayoutFooter = () => {
   return (
     <footer className={styles.footer}>
       <div className={styles.headerContainer}>
-        <UIIconButton name={'user'} />
+        <UIIconButton name={'home'} />
       </div>
     </footer>
   );
