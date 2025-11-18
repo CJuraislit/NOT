@@ -6,8 +6,8 @@ import ApiError from '../error/ApiError';
 export const getMyProfile = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: ['id', 'email', 'username', 'rating', 'created_at'],
-      include: [{ model: UserStats, as: 'stats' }],
+      attributes: ['id', 'email', 'username', 'rating', 'created_at', 'role'],
+      // include: [{ model: UserStats, as: 'stats' }],
     });
     if (!user) {
       return next(ApiError.badRequest('User not found'));
