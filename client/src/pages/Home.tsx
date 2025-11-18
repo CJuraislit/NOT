@@ -5,10 +5,13 @@ import PixelGridInteractive from '/components/features/PixelGridInteractive/Pixe
 import { userAttemptPixelMutation } from '/hooks/mutations/template.mutations';
 import { usePixelSelectStore } from '/store/pixelSelcet.store';
 import { calcCellSize } from '/utils/grid';
+import PixelGridPreview from '/components/features/PixelGridPreview/PixelGridPreview';
+import UIModal from '/components/UI/UIModal/UIModal';
 
 const Home = () => {
   const [showGrid, setShowGrid] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: templates, isLoading, isError } = useTemplatesQuery();
 
@@ -41,6 +44,16 @@ const Home = () => {
     setActiveIndex(nextIndex);
   };
 
+  const handleOpenModal = () => {
+    clearSelected();
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    clearSelected();
+    setIsModalOpen(false);
+  };
+
   if (isLoading) return null;
   if (isError || !templates) return null;
 
@@ -56,7 +69,7 @@ const Home = () => {
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
-        gap: '10px',
+        gap: '8px',
       }}
     >
       <p>{template.name}</p>
@@ -77,23 +90,40 @@ const Home = () => {
       </div>
 
       <div style={{ padding: '10px', border: '4px solid #9e9e9b' }}>
-        <PixelGridInteractive
+        <PixelGridPreview
           gridWidth={template.width}
           gridHeight={template.height}
-          showGrid={showGrid}
           solvedCoords={template.solvedCoords}
           solvedCount={template.solvedCount}
           isCompleted={template.isCompleted}
           cellSize={cellSize}
         />
       </div>
+      <UIButton onClick={handleOpenModal}>Play</UIButton>
 
-      <UIButton disabled={!selected || isPending} onClick={handleAttempt}>
-        {isPending ? 'Checking...' : 'Check pixel'}
-      </UIButton>
-      <UIButton onClick={() => setShowGrid(!showGrid)}>
-        {showGrid ? 'Hide grid' : 'Show grid'}
-      </UIButton>
+      <UIModal isOpen={isModalOpen} onClose={handleCloseModal} title={template.name}>
+        <div style={{ padding: '10px', border: '4px solid #9e9e9b' }}>
+          <PixelGridInteractive
+            gridWidth={template.width}
+            gridHeight={template.height}
+            showGrid={showGrid}
+            solvedCoords={template.solvedCoords}
+            solvedCount={template.solvedCount}
+            isCompleted={template.isCompleted}
+            cellSize={cellSize}
+          />
+        </div>
+        <div
+          style={{ display: 'flex', gap: '8px', justifyContent: 'center', alignItems: 'center' }}
+        >
+          <UIButton disabled={!selected || isPending} onClick={handleAttempt}>
+            {isPending ? 'Checking...' : 'Check pixel'}
+          </UIButton>
+          <UIButton onClick={() => setShowGrid(!showGrid)}>
+            {showGrid ? 'Hide grid' : 'Show grid'}
+          </UIButton>
+        </div>
+      </UIModal>
     </div>
   );
 };

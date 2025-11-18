@@ -12,6 +12,7 @@ type UIIconButtonProps = {
   variant?: UIIconButtonVariant;
   size?: UIIconButtonSize;
   className?: string;
+  color?: string;
 } & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 const ICON_SIZE_MAP: Record<UIIconButtonSize, number> = {
@@ -25,6 +26,7 @@ const UIIconButton = ({
   variant = 'primary',
   size = 'medium',
   className,
+  color = 'currentColor',
   ...props
 }: UIIconButtonProps) => {
   return (
@@ -33,7 +35,7 @@ const UIIconButton = ({
       {...props}
     >
       <span className={styles.content}>
-        <UIIcon name={name} size={ICON_SIZE_MAP[size]} color="currentColor" />
+        <UIIcon name={name} size={ICON_SIZE_MAP[size]} color={color} />
       </span>
     </button>
   );
