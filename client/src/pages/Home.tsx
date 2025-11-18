@@ -69,11 +69,9 @@ const Home = () => {
       </div>
       <UIButton onClick={handleOpenModal}>Play</UIButton>
 
-      <TemplatePlayModal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        template={template}
-      />
+      {isModalOpen && (
+        <TemplatePlayModal open={true} onClose={() => setIsModalOpen(false)} template={template} />
+      )}
     </div>
   );
 };

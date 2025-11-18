@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './styles/AppLayoutHeader.module.css';
 import UIIconButton from '/components/UI/UIIconButton/UIIconButton';
-import { usePixelSelectStore } from '/store/pixelSelcet.store';
 import { useAuthStore } from '/store/auth.store';
 
 const AppLayoutHeader = () => {
